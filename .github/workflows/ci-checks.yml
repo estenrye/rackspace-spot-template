@@ -20,6 +20,9 @@ jobs:
       - name: Lint Code
         run: devbox run lint
 
+      - name: New Cloudspace
+        run: devbox run new-cloudspace
+
       - name: Initialize Cloudspace Terraform workspace
         run: devbox run init
       
