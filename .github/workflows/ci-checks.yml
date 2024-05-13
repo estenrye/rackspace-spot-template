@@ -28,3 +28,5 @@ jobs:
       
       - name: Plan Cloudspace Terraform changes
         run: devbox run plan-cloudspace
+        env:
+          RXTSPOT_TOKEN: ${{ secrets.RXTSPOT_TOKEN }}
