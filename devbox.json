@@ -14,7 +14,7 @@
     ],
     "scripts": {
       "new-cloudspace": [
-        "task new-cloudspace"
+        "task new-cloudspace NAME=example-cloudspace"
       ],
       "lint": [
         "task lint-all"
