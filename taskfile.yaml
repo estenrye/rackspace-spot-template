@@ -1,0 +1,324 @@
+version: '3'
+
+env:
+  CATEGORY: General Purpose
+  CORES: 30
+  MEMORY: 120
+  REGION: us-central-dfw-1
+  SERVER_CLASS: gp.vs1.large-dfw
+  MIN_NODES: 2
+  MAX_NODES: 4
+  HA_CONTROL_PLANE: false
+  PERCENTILE: "80_percentile"
+
+tasks:
+  spot-list-regions:
+    desc: List all Rackspace SPOT regions
+    cmds:
+      - >
+        curl -sL https://ngpc-prod-public-data.s3.us-east-2.amazonaws.com/percentiles.json \
+          | jq -r '.regions | keys | .[]'
+
+  spot-list-categories:
+    desc: List all Rackspace SPOT regions
+    cmds:
+      - >
+        curl -sL https://ngpc-prod-public-data.s3.us-east-2.amazonaws.com/percentiles.json \
+          | jq -r '[ .regions["{{ .REGION }}"]
+          | to_entries | .[]
+          | .value.category ] | sort | unique
+          | .[]'
+
+  spot-list-sizes:
+    desc: List all Rackspace SPOT sizes for a region.
+    cmds:
+      - >
+        curl -sL https://ngpc-prod-public-data.s3.us-east-2.amazonaws.com/percentiles.json \
+        | jq -r '.regions["{{ .REGION }}"] 
+                | to_entries | .[]
+                | select(.value.category == "{{ .CATEGORY }}")
+                | select(.value.cpu | tonumber <= {{ .CORES }})
+                | select(.value.memory | sub("GB"; "") | tonumber <= {{ .MEMORY }})
+                | .key'
+  
+  spot-bid-price:
+    desc: Get the bid price for a specified SERVER_CLASS
+    cmds:
+      - >
+        if [ -z "{{ .BID_PRICE }}" ];
+        then
+          curl -sL https://ngpc-prod-public-data.s3.us-east-2.amazonaws.com/percentiles.json \
+          | jq -r '.regions."{{ .REGION }}" | to_entries | .[] | select(.key == "{{ .SERVER_CLASS }}") | .value."{{ .PERCENTILE }}"';
+        else
+          echo "{{ .BID_PRICE }}";
+        fi;
+
+  new-cloudspace:
+    env:
+      SERVER_CLASS: gp.vs1.large-dfw
+    vars:
+      NAME:
+        sh: task random-name NAME="{{ .NAME }}"
+      BID_PRICE:
+        sh: task spot-bid-price REGION="{{ .REGION }}" SERVER_CLASS="{{ .SERVER_CLASS }}" BID_PRICE="{{ .BID_PRICE }}"
+    cmds:
+      - mkdir -p cloudspace/vars/{{ .NAME }} kubeconfig/vars/{{ .NAME }}
+      - >
+        cat .vars.templates/cloudspace.tfvars.json | NAME="{{ .NAME }}" BID_PRICE="{{ .BID_PRICE }}" SERVER_CLASS="{{ .SERVER_CLASS }}" envsubst > cloudspace/vars/{{ .NAME }}/tfvars.json
+      - >
+        if [ ! -z "{{ .PREEMPTION_WEBHOOK }}" ];
+        then
+          cat <<< $(jq '.preemption_webhook="{{ .PREEMPTION_WEBHOOK }}"' cloudspace/vars/{{ .NAME }}/tfvars.json) > cloudspace/vars/{{ .NAME }}/tfvars.json;
+        fi;
+
+  lint:
+    desc: Lint the Terraform files
+    dir: "{{ .WORKSPACE }}"
+    internal: true
+    cmds:
+      - echo "Linting {{ .WORKSPACE }} Terraform files"
+      - tflint
+
+  lint-all:
+    desc: Lint all Terraform files
+    cmds:
+      - task: lint
+        vars:
+          WORKSPACE: cloudspace
+      - task: lint
+        vars:
+          WORKSPACE: cloudspace-health
+      - task: lint
+        vars:
+          WORKSPACE: cloudspace-kubeconfig
+
+  init-all:
+    desc: Initialize the Cloudspace Terraform workspace
+    vars:
+      NAMES:
+        sh: ls -1 cloudspace/vars
+    cmds:
+      - task: each-env
+        vars:
+          TASK: init
+          WORKSPACE: cloudspace
+      - task: each-env
+        vars:
+          TASK: init
+          WORKSPACE: cloudspace-health
+      - task: each-env
+        vars:
+          TASK: init
+          WORKSPACE: cloudspace-kubeconfig
+
+  plan-cloudspace:
+    desc: Plan the Cloudspace Terraform changes.
+    cmds:
+      - task: plan
+        vars:
+          WORKSPACE: cloudspace
+          TF_VAR_FILE: "-var-file=vars/{{ .NAME }}/tfvars.json"
+          NAME: "{{ .NAME }}"
+
+  plan-all-cloudspaces:
+    desc: Plan all Cloudspace Terraform changes.
+    cmds:
+      - task: each-env
+        vars:
+          TASK: plan-cloudspace
+
+  apply-cloudspace:
+    desc: Apply the Cloudspace Terraform changes.
+    cmds:
+      - task: apply
+        vars:
+          WORKSPACE: cloudspace
+          NAME: "{{ .NAME }}"
+
+  apply-all-cloudspaces:
+    desc: Apply all Cloudspace Terraform changes.
+    cmds:
+      - task: each-env
+        vars:
+          TASK: apply-cloudspace
+
+
+  destroy-cloudspace:
+    desc: Destroy the Cloudspace Terraform resources.
+    cmds:
+      - task: destroy
+        vars:
+          WORKSPACE: cloudspace
+
+  show-health:
+    desc: Show the Health Terraform resources.
+    dir: cloudspace-health
+    cmds:
+      - task: plan
+        vars:
+          WORKSPACE: cloudspace-health
+          NAME: "{{ .NAME }}"
+      - >
+        terraform show -json vars/{{ .NAME }}/plan.tfplan | jq '{ 
+          "cshealth": .planned_values.outputs.cshealth.value,
+          "csphase": .planned_values.outputs.csphase.value,
+          "csreason": .planned_values.outputs.csreason.value
+        }' > vars/{{ .NAME }}/health.json
+      - rm vars/{{ .NAME }}/plan.tfplan
+      - jq . vars/{{ .NAME }}/health.json
+
+  show-all-health:
+    desc: Show all Health Terraform resources.
+    cmds:
+      - task: each-env
+        vars:
+          TASK: show-health
+  
+  plan-kubeconfig:
+    desc: Get the Kubeconfig for the Cloudspace
+    cmds:
+      - task: plan
+        vars:
+          WORKSPACE: cloudspace-kubeconfig
+          NAME: "{{ .NAME }}"
+  
+  plan-all-kubeconfigs:
+    desc: Get all Kubeconfigs for the Cloudspace
+    cmds:
+      - task: each-env
+        vars:
+          TASK: plan-kubeconfig
+
+  apply-kubeconfig:
+    desc: Apply the Kubeconfig for the Cloudspace
+    cmds:
+      - task: apply
+        vars:
+          WORKSPACE: cloudspace-kubeconfig
+          NAME: "{{ .NAME }}"
+  
+  apply-all-kubeconfigs:
+    desc: Apply all Kubeconfigs for the Cloudspace
+    cmds:
+      - task: each-env
+        vars:
+          TASK: apply-kubeconfig
+
+  destroy-kubeconfig:
+    desc: Destroy the Kubeconfig for the Cloudspace
+    cmds:
+      - task: destroy
+        vars:
+          WORKSPACE: cloudspace-kubeconfig
+          NAME: "{{ .NAME }}"
+
+  each-env:
+    desc: Run a task for each environment
+    vars:
+      NAMES:
+        sh: ls -1 cloudspace/vars
+    cmds:
+      - for: { var: NAMES, as: ITEM }
+        task: "{{ .TASK }}"
+        vars:
+          NAME: "{{ .ITEM }}"
+          WORKSPACE: "{{ .WORKSPACE }}"
+
+  tf:
+    desc: Run a Terraform command
+    env:
+      TF_IN_AUTOMATION: 1
+      TF_WORKSPACE: "{{ .NAME }}"
+      TF_VAR_cloudspace_name: "{{ .NAME }}"
+    dir: "{{ .WORKSPACE }}"
+    internal: true
+    cmds:
+      - terraform {{ .GLOBAL_ARGS }} {{ .ACTION }} {{ .ARGS }}
+
+  init:
+    desc: Initialize the Terraform workspace
+    internal: true
+    cmds:
+      - task: tf
+        vars:
+          WORKSPACE: "{{ .WORKSPACE }}"
+          ACTION: "init"
+          ARGS: "-upgrade"
+          NAME: "{{ .NAME }}"
+
+  plan:
+    desc: Plan the Terraform changes.
+    internal: true
+    dir: "{{ .WORKSPACE }}"
+    cmds:
+      - mkdir -p vars/{{ .NAME }}
+      - task: tf
+        vars:
+          WORKSPACE: "{{ .WORKSPACE }}"
+          ACTION: "plan"
+          ARGS: "{{ .TF_VAR_FILE }} -out=vars/{{ .NAME }}/plan.tfplan"
+          NAME: "{{ .NAME }}"
+
+  apply:
+    desc: Apply the Terraform changes.
+    internal: true
+    dir: "{{ .WORKSPACE }}"
+    cmds:
+      - task: tf
+        vars:
+          WORKSPACE: "{{ .WORKSPACE }}"
+          ACTION: "apply"
+          ARGS: "vars/{{ .NAME }}/plan.tfplan"
+          NAME: "{{ .NAME }}"
+      - rm -f vars/{{ .NAME }}/plan.tfplan
+  
+  destroy:
+    desc: Destroy the Terraform resources.
+    internal: true
+    cmds:
+      - task: tf
+        vars:
+          WORKSPACE: "{{ .WORKSPACE }}"
+          ACTION: "destroy"
+          ARGS: "-auto-approve"
+          NAME: "{{ .NAME }}"
+
+  show:
+    desc: Show the Terraform resources.
+    internal: true
+    cmds:
+      - task: tf
+        vars:
+          WORKSPACE: "{{ .WORKSPACE }}"
+          ACTION: "show"
+          ARGS: "-json vars/{{ .NAME }}/terraform.tfstate"
+          NAME: "{{ .NAME }}"
+
+  random-name:
+    desc: Generate a random word
+    silent: true
+    vars:
+      NUM_WORDS: 2
+      ALL_NON_RANDOM_WORDS: /usr/share/dict/words
+    cmds:
+      - >
+        if [ -z "{{ .NAME }}" ];
+        then
+          X=0;
+          NAME="";
+          COUNT_WORDS=`cat {{ .ALL_NON_RANDOM_WORDS }} | wc -l`;
+          while [ "$X" -lt {{ .NUM_WORDS }} ]; do
+            RANDOM_NUMBER=`od -N3 -An -i /dev/urandom | 
+                            awk -v f=0 -v r="$COUNT_WORDS" '{printf "%i\n", f + r * $1 / 16777216}'`;
+            WORD=$(sed `echo $RANDOM_NUMBER`"q;d" {{ .ALL_NON_RANDOM_WORDS }} | tr '[:upper:]' '[:lower:]');
+            X=$((X+1));
+            if [ "$X" -lt {{ .NUM_WORDS }} ]; then
+              NAME=`echo "$NAME$WORD-"`;
+            else
+              NAME="$NAME$WORD";
+            fi;
+          done;
+          echo $NAME;
+        else
+          echo "{{ .NAME }}";
+        fi;

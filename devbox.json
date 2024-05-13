@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.10.6/.schema/devbox.schema.json",
+  "packages": [
+    "terraform@1.8.2",
+    "go-task@3.36.0",
+    "jq@1.7.1",
+    "curl@8.7.1",
+    "envsubst@1.4.2",
+    "tflint@0.50.3"
+  ],
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to devbox!' > /dev/null"
+    ],
+    "scripts": {
+      "new-cloudspace": [
+        "task new-cloudspace"
+      ],
+      "lint": [
+        "task lint-all"
+      ],
+      "init": [
+        "task init-all"
+      ],
+      "plan-cloudspace": [
+        "task plan-all-cloudspaces"
+      ],
+      "test": [
+        "echo \"Error: no test specified\" && exit 1"
+      ]
+    }
+  }
+}
