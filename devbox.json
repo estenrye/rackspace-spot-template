@@ -6,7 +6,9 @@
     "jq@1.7.1",
     "curl@8.7.1",
     "envsubst@1.4.2",
-    "tflint@0.50.3"
+    "tflint@0.50.3",
+    "kubectl@1.30.0",
+    "kubectl-neat@2.0.3"
   ],
   "shell": {
     "init_hook": [
