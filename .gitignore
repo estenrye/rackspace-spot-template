@@ -1,0 +1,9 @@
+**/.terraform
+**/.terraform.lock.hcl
+**/*.tfstate
+**/*.tfstate.lock.info
+**/*.tfstate.backup
+**/*.tfplan
+**/devbox.lock
+**/terraform.tfstate.d/**
+**/vars/**/health.json
