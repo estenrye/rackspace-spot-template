@@ -18,7 +18,15 @@ The Rackspace Spot TF Template provides a convenient way to provision resources 
 
 To get started with this template, follow these steps:
 
-TBD
+1. Click the "Use this template" button to create a new repository based on this template.
+2. Provide a a name and description for the new repository.
+3. Choose whether to make the repository public or private.
+4. Click the "Create repository from template" button to create the new repository.
+5. Click the "Settings" tab in the new repository.
+6. Click the "Secrets and variables" link in the sidebar.
+7. Click the "Actions" link in the sidebar.
+8. Create a new repository secret with the name `RXTSPOT_TOKEN` and the value of your Rackspace Terraform API token.
+9. Clone the new repository to your local machine.
 
 ## Usage
 
