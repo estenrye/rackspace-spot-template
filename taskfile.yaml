@@ -123,6 +123,7 @@ tasks:
   plan-all-cloudspaces:
     desc: Plan all Cloudspace Terraform changes.
     cmds:
+      - mkdir -p cloudspace/vars
       - task: each-env
         vars:
           TASK: plan-cloudspace
