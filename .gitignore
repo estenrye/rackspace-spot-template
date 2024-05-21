@@ -4,6 +4,7 @@
 **/*.tfstate.lock.info
 **/*.tfstate.backup
 **/*.tfplan
+**/output.json
 **/devbox.lock
 **/terraform.tfstate.d/**
 **/vars/**/health.json

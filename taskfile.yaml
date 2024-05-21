@@ -15,9 +15,16 @@ tasks:
   spot-list-regions:
     desc: List all Rackspace SPOT regions
     cmds:
-      - >
-        curl -sL https://ngpc-prod-public-data.s3.us-east-2.amazonaws.com/percentiles.json \
-          | jq -r '.regions | keys | .[]'
+      - task: plan
+        silent: true
+        vars:
+          WORKSPACE: list-spot-regions
+          NAME: regions
+      - task: show-plan
+        vars:
+          WORKSPACE: list-spot-regions
+          NAME: regions
+          JQ_QUERY: .planned_values.outputs.regions.value
 
   spot-list-categories:
     desc: List all Rackspace SPOT regions
@@ -110,6 +117,10 @@ tasks:
         vars:
           TASK: init
           WORKSPACE: cloudspace-kubeconfig
+      - task: init
+        vars:
+          WORKSPACE: list-spot-regions
+          NAME: regions
 
   plan-cloudspace:
     desc: Plan the Cloudspace Terraform changes.
@@ -284,7 +295,7 @@ tasks:
           ARGS: "-auto-approve"
           NAME: "{{ .NAME }}"
 
-  show:
+  show-plan:
     desc: Show the Terraform resources.
     internal: true
     cmds:
@@ -292,7 +303,7 @@ tasks:
         vars:
           WORKSPACE: "{{ .WORKSPACE }}"
           ACTION: "show"
-          ARGS: "-json vars/{{ .NAME }}/terraform.tfstate"
+          ARGS: "-json vars/{{ .NAME }}/plan.tfplan | jq {{ .JQ_ARGS }} '{{ .JQ_QUERY }}' | tee vars/{{ .NAME }}/output.json"
           NAME: "{{ .NAME }}"
 
   random-name:

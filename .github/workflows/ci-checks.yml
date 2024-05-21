@@ -45,6 +45,11 @@ jobs:
       - name: Initialize Cloudspace Terraform workspace
         run: devbox run init
       
+      - name: List Spot Regions
+        run: devbox run list-spot-regions
+        env:
+          RXTSPOT_TOKEN: ${{ secrets.RXTSPOT_TOKEN }}
+
       - name: Plan Cloudspace Terraform changes
         run: devbox run plan-cloudspace
         env:

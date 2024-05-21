@@ -27,6 +27,9 @@
       "init": [
         "task init-all"
       ],
+      "list-regions": [
+        "task spot-list-regions"
+      ],
       "plan-cloudspace": [
         "task plan-all-cloudspaces"
       ],
