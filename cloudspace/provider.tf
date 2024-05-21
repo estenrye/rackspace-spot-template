@@ -2,7 +2,6 @@ terraform {
     required_version = ">= 0.13"
 
     backend "s3" {
-        bucket = var.BUCKET_NAME
         key = "terraform.tfstate.d/cloudspace"
     }
 
