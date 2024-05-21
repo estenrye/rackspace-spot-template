@@ -36,17 +36,19 @@ tasks:
           | .value.category ] | sort | unique
           | .[]'
 
-  spot-list-sizes:
+  spot-list-server-classes:
     desc: List all Rackspace SPOT sizes for a region.
     cmds:
-      - >
-        curl -sL https://ngpc-prod-public-data.s3.us-east-2.amazonaws.com/percentiles.json \
-        | jq -r '.regions["{{ .REGION }}"] 
-                | to_entries | .[]
-                | select(.value.category == "{{ .CATEGORY }}")
-                | select(.value.cpu | tonumber <= {{ .CORES }})
-                | select(.value.memory | sub("GB"; "") | tonumber <= {{ .MEMORY }})
-                | .key'
+      - task: plan
+        silent: true
+        vars:
+          WORKSPACE: list-spot-server-classes
+          NAME: server-classes
+      - task: show-plan
+        vars:
+          WORKSPACE: list-spot-server-classes
+          NAME: server-classes
+          JQ_QUERY: .planned_values.outputs.server_classes.value
   
   spot-bid-price:
     desc: Get the bid price for a specified SERVER_CLASS
