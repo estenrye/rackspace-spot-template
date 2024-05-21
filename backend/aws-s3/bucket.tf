@@ -62,6 +62,28 @@ resource "aws_iam_role" "github_actions_iam_role" {
         ]
     })
 
+    inline_policy {
+        name = "GitHubActionsIAMRolePolicy"
+        policy = jsonencode({
+            Version = "2012-10-17",
+            Statement = [
+                {
+                    Effect = "Allow",
+                    Action = [
+                        "s3:GetObject",
+                        "s3:PutObject",
+                        "s3:ListBucket",
+                        "s3:DeleteObject"
+                    ],
+                    Resource = [
+                        aws_s3_bucket.tf_state_bucket.arn,
+                        "${aws_s3_bucket.tf_state_bucket.arn}/*"
+                    ]
+                }
+            ]
+        })
+    }
+
     tags = {
         Name = "GitHub Actions IAM Role"
         Project     = "terraform-state-storage"
@@ -78,4 +100,10 @@ resource "github_actions_variable"  "github_actions_aws_region" {
     repository = var.github_repo
     variable_name = "AWS_REGION"
     value = var.aws_region
+}
+
+resource "github_actions_secret" "github_actions_rackspace_spot_token" {
+    repository = var.github_repo
+    secret_name = "RXTSPOT_TOKEN"
+    plaintext_value = var.rackspace_spot_token
 }
