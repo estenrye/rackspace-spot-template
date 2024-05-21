@@ -36,3 +36,7 @@ variable "github_repo" {
   type = string
   default = "rackspace-spot-template"
 }
+
+variable "rackspace_spot_token" {
+  type = string
+}

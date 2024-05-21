@@ -1,7 +1,9 @@
 terraform {
     required_version = ">= 0.13"
 
-    backend "local" {}
+    backend "s3" {
+        key = "terraform.tfstate.d/cloudspace"
+    }
 
     required_providers {
         spot = {
