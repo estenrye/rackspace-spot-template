@@ -51,7 +51,7 @@ resource "aws_iam_role" "github_actions_iam_role" {
                 Action = "sts:AssumeRoleWithWebIdentity",
                 Condition = {
                     StringEquals = {
-                        "${aws_iam_openid_connect_provider.github_actions_oidc_provider.url}:sub" = "repo:${var.github_orgname}/${var.github_repo}:ref:refs/heads/*"
+                        "${aws_iam_openid_connect_provider.github_actions_oidc_provider.url}:sub" = "repo:${var.github_orgname}/${var.github_repo}:ref:refs/heads/main"
                         "${aws_iam_openid_connect_provider.github_actions_oidc_provider.url}:aud" = "sts.amazonaws.com"
                     }
                 }
