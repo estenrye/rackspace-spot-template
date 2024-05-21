@@ -102,6 +102,12 @@ resource "github_actions_variable"  "github_actions_aws_region" {
     value = var.aws_region
 }
 
+resource "github_actions_variable"  "github_actions_bucket_name" {
+    repository = var.github_repo
+    variable_name = "TF_VAR_BUCKET_NAME"
+    value = var.bucket_name
+}
+
 resource "github_actions_secret" "github_actions_rackspace_spot_token" {
     repository = var.github_repo
     secret_name = "RXTSPOT_TOKEN"

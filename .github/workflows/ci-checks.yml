@@ -10,9 +10,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      TF_VAR_BUCKET_NAME: ${{ vars.TF_VAR_BUCKET_NAME }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: ${{ vars.IAM_ROLE_ARN }}
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Sts GetCallerIdentity
+        run: |
+          aws sts get-caller-identity
 
       - name: Install devbox
         uses: jetify-com/devbox-install-action@v0.11.0

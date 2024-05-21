@@ -1,7 +1,10 @@
 terraform {
     required_version = ">= 0.13"
 
-    backend "local" {}
+    backend "s3" {
+        bucket = var.BUCKET_NAME
+        key = "terraform.tfstate.d/cloudspace-health"
+    }
 
     required_providers {
         spot = {
