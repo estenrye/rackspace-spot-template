@@ -35,6 +35,7 @@ resource "aws_iam_openid_connect_provider" "github_actions_oidc_provider" {
 
     tags = {
         Name = "GitHub Actions OIDC Provider"
+        Project     = "terraform-state-storage"
     }
 }
 
@@ -61,6 +62,7 @@ resource "aws_iam_role" "github_actions_iam_role" {
 
     tags = {
         Name = "GitHub Actions IAM Role"
+        Project     = "terraform-state-storage"
     } 
 }
 
