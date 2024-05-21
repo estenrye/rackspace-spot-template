@@ -8,7 +8,10 @@
     "envsubst@1.4.2",
     "tflint@0.50.3",
     "kubectl@1.30.0",
-    "kubectl-neat@2.0.3"
+    "kubectl-neat@2.0.3",
+    "saml2aws@2.36.15",
+    "awscli2@2.15.43",
+    "gh@2.49.2"
   ],
   "shell": {
     "init_hook": [

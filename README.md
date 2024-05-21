@@ -27,6 +27,20 @@ To get started with this template, follow these steps:
 7. Click the "Actions" link in the sidebar.
 8. Create a new repository secret with the name `RXTSPOT_TOKEN` and the value of your Rackspace Terraform API token.
 9. Clone the new repository to your local machine.
+10. Install Devbox
+
+    ```bash
+    curl -fsSL https://get.jetify.com/devbox | bash
+    ```
+11. Launch Devbox
+
+    ```bash
+    devbox shell
+    ```
+12. Create a new cloudspace
+    ```bash
+    task new-cloudspace
+    ```
 
 ## Usage
 
