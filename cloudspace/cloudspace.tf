@@ -2,10 +2,10 @@ locals {
   json_files = fileset(path.module, "vars/${var.cloudspace_name}/nodepools/*.json")
   json_data  = [for f in local.json_files : jsondecode(file("${path.module}/${f}"))]
   node_pools = {
-    for obj in local.json_data : "${obj.name}" => {
-        cpus     = [ "${obj.cpus}" ]
-        memory   = [ "${obj.memory}" ]
-        category = [ "${obj.category}" ]
+    for obj in local.json_data : obj.name => {
+        cpus     = [ obj.cpus ]
+        memory   = [ obj.memory ]
+        category = [ obj.category ]
         min_nodes = tonumber(obj.min_nodes)
         max_nodes = tonumber(obj.max_nodes)
         max_bid   = tonumber(obj.max_bid)
