@@ -1,84 +1,95 @@
 version: '3'
 
-env:
-  CATEGORY: General Purpose
-  CORES: 30
-  MEMORY: 120
-  REGION: us-central-dfw-1
-  SERVER_CLASS: gp.vs1.large-dfw
-  MIN_NODES: 2
-  MAX_NODES: 4
-  HA_CONTROL_PLANE: false
-  PERCENTILE: "80_percentile"
-
 tasks:
-  spot-list-regions:
-    desc: List all Rackspace SPOT regions
-    cmds:
-      - task: plan
-        silent: true
-        vars:
-          WORKSPACE: list-spot-regions
-          NAME: regions
-      - task: show-plan
-        vars:
-          WORKSPACE: list-spot-regions
-          NAME: regions
-          JQ_QUERY: .planned_values.outputs.regions.value
-
-  spot-list-categories:
-    desc: List all Rackspace SPOT regions
+  add-var:
+    desc: Add a variable to the Terraform vars file
+    internal: true
     cmds:
       - >
-        curl -sL https://ngpc-prod-public-data.s3.us-east-2.amazonaws.com/percentiles.json \
-          | jq -r '[ .regions["{{ .REGION }}"]
-          | to_entries | .[]
-          | .value.category ] | sort | unique
-          | .[]'
-
-  spot-list-server-classes:
-    desc: List all Rackspace SPOT sizes for a region.
-    cmds:
-      - task: plan
-        silent: true
-        vars:
-          WORKSPACE: list-spot-server-classes
-          NAME: server-classes
-      - task: show-plan
-        vars:
-          WORKSPACE: list-spot-server-classes
-          NAME: server-classes
-          JQ_QUERY: .planned_values.outputs.server_classes.value
-  
-  spot-bid-price:
-    desc: Get the bid price for a specified SERVER_CLASS
-    cmds:
-      - >
-        if [ -z "{{ .BID_PRICE }}" ];
+        if [ ! -z "{{ .value }}" ];
         then
-          curl -sL https://ngpc-prod-public-data.s3.us-east-2.amazonaws.com/percentiles.json \
-          | jq -r '.regions."{{ .REGION }}" | to_entries | .[] | select(.key == "{{ .SERVER_CLASS }}") | .value."{{ .PERCENTILE }}"';
-        else
-          echo "{{ .BID_PRICE }}";
+          cat <<< $(jq '.{{ .key }}="{{ .value }}"' {{ .file }}) > {{ .file }};
+        elif [ ! -z "{{ .default }}" ];
+        then
+          cat <<< $(jq '.{{ .key }}="{{ .default }}"' {{ .file }}) > {{ .file }};
         fi;
 
   new-cloudspace:
-    env:
-      SERVER_CLASS: gp.vs1.large-dfw
     vars:
       NAME:
         sh: task random-name NAME="{{ .NAME }}"
-      BID_PRICE:
-        sh: task spot-bid-price REGION="{{ .REGION }}" SERVER_CLASS="{{ .SERVER_CLASS }}" BID_PRICE="{{ .BID_PRICE }}"
     cmds:
       - mkdir -p cloudspace/vars/{{ .NAME }} kubeconfig/vars/{{ .NAME }}
-      - >
-        cat .vars.templates/cloudspace.tfvars.json | NAME="{{ .NAME }}" BID_PRICE="{{ .BID_PRICE }}" SERVER_CLASS="{{ .SERVER_CLASS }}" envsubst > cloudspace/vars/{{ .NAME }}/tfvars.json
-      - >
-        if [ ! -z "{{ .PREEMPTION_WEBHOOK }}" ];
-        then
-          cat <<< $(jq '.preemption_webhook="{{ .PREEMPTION_WEBHOOK }}"' cloudspace/vars/{{ .NAME }}/tfvars.json) > cloudspace/vars/{{ .NAME }}/tfvars.json;
-        fi;
+      - echo "{}" > cloudspace/vars/{{ .NAME }}/tfvars.json
+      - task: add-var
+        vars:
+          key: "cloudspace_name"
+          value: "{{ .NAME }}"
+          file: "cloudspace/vars/{{ .NAME }}/tfvars.json"
+      - task: add-var
+        vars:
+          key: "region"
+          value: "{{ .REGION }}"
+          file: "cloudspace/vars/{{ .NAME }}/tfvars.json"
+      - task: add-var
+        vars:
+          key: "ha_control_plane"
+          value: "{{ .HA_CONTROL_PLANE }}"
+          file: "cloudspace/vars/{{ .NAME }}/tfvars.json"
+      - task: add-var
+        vars:
+          key: "preemption_webhook"
+          value: "{{ .PREEMPTION_WEBHOOK }}"
+          file: "cloudspace/vars/{{ .NAME }}/tfvars.json"
+
+  add-node-pool:
+    vars:
+      NODEPOOL_NAME:
+        sh: task random-name NAME="{{ .NODEPOOL_NAME }}"
+    cmds:
+      - mkdir -p cloudspace/vars/{{ .NAME }}/nodepools
+      - echo "{}" > cloudspace/vars/{{ .NAME }}/nodepools/{{ .NODEPOOL_NAME }}.json
+      - task: add-var
+        vars:
+          key: "name"
+          value: "{{ .NODEPOOL_NAME }}"
+          file: "cloudspace/vars/{{ .NAME }}/nodepools/{{ .NODEPOOL_NAME }}.json"
+      - task: add-var
+        vars:
+          key: "cpus"
+          value: "{{ .CPUS }}"
+          default: ">4"
+          file: "cloudspace/vars/{{ .NAME }}/nodepools/{{ .NODEPOOL_NAME }}.json"
+      - task: add-var
+        vars:
+          key: "memory"
+          value: "{{ .MEMORY }}"
+          default: ">8GB"
+          file: "cloudspace/vars/{{ .NAME }}/nodepools/{{ .NODEPOOL_NAME }}.json"
+      - task: add-var
+        vars:
+          key: "min_nodes"
+          value: "{{ .MIN_NODES }}"
+          default: 1
+          file: "cloudspace/vars/{{ .NAME }}/nodepools/{{ .NODEPOOL_NAME }}.json"
+      - task: add-var
+        vars:
+          key: "max_nodes"
+          value: "{{ .MAX_NODES }}"
+          default: 10
+          file: "cloudspace/vars/{{ .NAME }}/nodepools/{{ .NODEPOOL_NAME }}.json"
+      - task: add-var
+        vars:
+          key: "category"
+          value: "{{ .CATEGORY }}"
+          default: "General Purpose"
+          file: "cloudspace/vars/{{ .NAME }}/nodepools/{{ .NODEPOOL_NAME }}.json"
+      - task: add-var
+        vars:
+          key: "max_bid"
+          value: "{{ .MAX_BID }}"
+          default: 0.008
+          file: "cloudspace/vars/{{ .NAME }}/nodepools/{{ .NODEPOOL_NAME }}.json"
 
   lint:
     desc: Lint the Terraform files
@@ -119,10 +130,6 @@ tasks:
         vars:
           TASK: init
           WORKSPACE: cloudspace-kubeconfig
-      - task: init
-        vars:
-          WORKSPACE: list-spot-regions
-          NAME: regions
 
   plan-cloudspace:
     desc: Plan the Cloudspace Terraform changes.

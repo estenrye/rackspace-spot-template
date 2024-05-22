@@ -6,6 +6,11 @@ terraform {
     }
 
     required_providers {
+        http = {
+            source = "hashicorp/http"
+            version = "3.4.2"
+        }
+
         spot = {
             source = "rackerlabs/spot"
             version = "0.0.9"
@@ -13,4 +18,5 @@ terraform {
     }
 }
 
+provider "http" {}
 provider "spot" {}

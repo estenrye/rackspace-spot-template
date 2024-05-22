@@ -4,24 +4,13 @@ variable "cloudspace_name" {
     default     = "example"
 }
 
-variable "region" {
+variable region {
     description = "Region of the Rackspace Spot Cloudspace"
     type        = string
-    default     = "us-central-dfw-1"
+    default     = "DFW"
 }
 
-variable "node_pools" {
-    description = "List of Rackspace Spot Node Pools"
-    type        = map(object({
-        server_class = string
-        bid_price = number
-        min_nodes = number
-        max_nodes = number
-    }))
-    default     = {}
-}
-
-variable "hacontrol_plane" {
+variable "ha_control_plane" {
     description = "High availability control plane"
     type        = bool
     default     = false
@@ -30,5 +19,6 @@ variable "hacontrol_plane" {
 variable "preemption_webhook" {
     description = "URL of the preemption webhook"
     type        = string
+    nullable    = true
     default     = null
 }
