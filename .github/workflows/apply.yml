@@ -47,7 +47,7 @@ jobs:
         env:
           RXTSPOT_TOKEN: ${{ secrets.RXTSPOT_TOKEN }}
 
-      - name: Plan Cloudspace Terraform changes
+      - name: Apply Cloudspace Terraform changes
         run: devbox run apply-cloudspace
         env:
           RXTSPOT_TOKEN: ${{ secrets.RXTSPOT_TOKEN }}
