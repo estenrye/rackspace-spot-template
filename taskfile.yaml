@@ -111,6 +111,7 @@ tasks:
       - task: lint
         vars:
           WORKSPACE: cloudspace-kubeconfig
+      - mkdir -p cloudspace/vars
 
   init-all:
     desc: Initialize the Cloudspace Terraform workspace
