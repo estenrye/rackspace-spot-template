@@ -111,10 +111,10 @@ tasks:
       - task: lint
         vars:
           WORKSPACE: cloudspace-kubeconfig
+      - mkdir -p cloudspace/vars
 
   init-all:
     desc: Initialize the Cloudspace Terraform workspace
-    precondition: test -d cloudspace/vars
     vars:
       NAMES:
         sh: ls -1 cloudspace/vars
@@ -134,7 +134,7 @@ tasks:
 
   plan-cloudspace:
     desc: Plan the Cloudspace Terraform changes.
-    precondition: test -d vars/{{ .NAME }}
+    precondition: test -d cloudspace/vars/{{ .NAME }}
     cmds:
       - task: plan
         vars:
@@ -145,14 +145,13 @@ tasks:
   plan-all-cloudspaces:
     desc: Plan all Cloudspace Terraform changes.
     cmds:
-      - mkdir -p cloudspace/vars
       - task: each-env
         vars:
           TASK: plan-cloudspace
 
   apply-cloudspace:
     desc: Apply the Cloudspace Terraform changes.
-    precondition: test -f vars/{{ .NAME }}/plan.tfplan
+    precondition: test -f cloudspace/vars/{{ .NAME }}/plan.tfplan
     cmds:
       - task: apply
         vars:
