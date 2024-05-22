@@ -42,6 +42,9 @@ jobs:
       - name: New Cloudspace
         run: devbox run new-cloudspace
 
+      - name: New Nodepool
+        run: devbox run new-nodepool
+
       - name: Initialize Cloudspace Terraform workspace
         run: devbox run init
       
