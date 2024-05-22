@@ -1,8 +1,8 @@
-name: CI Checks
+name: Apply Terraform Changes
 
 on:
   workflow_dispatch:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -39,16 +39,15 @@ jobs:
       - name: Lint Code
         run: devbox run lint
 
-      - name: New Cloudspace
-        run: devbox run new-cloudspace
-
-      - name: New Nodepool
-        run: devbox run new-nodepool
-
       - name: Initialize Cloudspace Terraform workspace
         run: devbox run init
       
       - name: Plan Cloudspace Terraform changes
         run: devbox run plan-cloudspace
+        env:
+          RXTSPOT_TOKEN: ${{ secrets.RXTSPOT_TOKEN }}
+
+      - name: Plan Cloudspace Terraform changes
+        run: devbox run apply-cloudspace
         env:
           RXTSPOT_TOKEN: ${{ secrets.RXTSPOT_TOKEN }}
