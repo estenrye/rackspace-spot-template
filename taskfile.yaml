@@ -114,6 +114,7 @@ tasks:
 
   init-all:
     desc: Initialize the Cloudspace Terraform workspace
+    precondition: test -d vars/{{ .NAME }}
     vars:
       NAMES:
         sh: ls -1 cloudspace/vars
