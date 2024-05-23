@@ -35,6 +35,9 @@
       "plan-cloudspace": [
         "task plan-all-cloudspaces"
       ],
+      "apply-cloudspace": [
+        "task apply-all-cloudspaces"
+      ],
       "test": [
         "echo \"Error: no test specified\" && exit 1"
       ]
