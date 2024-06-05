@@ -177,6 +177,7 @@ tasks:
     desc: Show the Health Terraform resources.
     dir: cloudspace-health
     cmds:
+      - mkdir -p vars/{{ .NAME }}
       - task: plan
         vars:
           WORKSPACE: cloudspace-health
