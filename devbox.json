@@ -21,7 +21,7 @@
         "task new-cloudspace NAME=example-cloudspace"
       ],
       "new-nodepool": [
-        "task add-node-pool NAME=example-nodepool"
+        "task add-node-pool NAME=example-cloudspace"
       ],
       "lint": [
         "task lint-all"
