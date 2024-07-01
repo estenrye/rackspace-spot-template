@@ -11,6 +11,7 @@ resource "aws_kms_key" "logging_bucket" {
 #tfsec:ignore:aws-s3-enable-bucket-logging
 resource "aws_s3_bucket" "logging_bucket" {
   #checkov:skip=CKV2_AWS_62:Event notification is not required for this bucket.
+  #checkov:skip=CKV_AWS_144:Cross region replication is not required for this bucket
   bucket        = "s3-access-logs"
   force_destroy = var.force_destroy
   
