@@ -95,8 +95,7 @@ resource "aws_iam_role" "github_actions_iam_role" {
             "s3:DeleteObject"
           ],
           Resource = [
-            aws_s3_bucket.tf_state_bucket.arn,
-            "${aws_s3_bucket.tf_state_bucket.arn}/*"
+            aws_s3_bucket.tf_state_bucket.arn
           ]
         }
       ]
