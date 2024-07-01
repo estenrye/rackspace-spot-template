@@ -25,9 +25,9 @@ resource "aws_s3_bucket_versioning" "tf_state_bucket" {
 }
 
 resource "aws_s3_bucket_logging" "tf_state_bucket" {
-  bucket = aws_s3_bucket.example.id
+  bucket = aws_s3_bucket.tf_state_bucket.id
 
-  target_bucket = aws_s3_bucket.log_bucket.id
+  target_bucket = aws_s3_bucket.logging_bucket.id
   target_prefix = "${var.bucket_name}/"
 }
 
