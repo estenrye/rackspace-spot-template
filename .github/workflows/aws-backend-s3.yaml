@@ -1,42 +1,42 @@
-name: Plan AWS Backend S3 Changes
+# name: Plan AWS Backend S3 Changes
 
-on:
-  workflow_dispatch:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - backend-aws-s3/**
-      # - cloudspace/**
-      # - cloudspace-health/**
-      # - cloudspace-kubeconfig/**
+# on:
+#   workflow_dispatch:
+#   pull_request:
+#     branches:
+#       - main
+#     paths:
+#       - backend-aws-s3/**
+#       # - cloudspace/**
+#       # - cloudspace-health/**
+#       # - cloudspace-kubeconfig/**
 
-permissions:
-  id-token: write   # This is required for requesting the JWT
-  contents: read    # This is required for actions/checkout
+# permissions:
+#   id-token: write   # This is required for requesting the JWT
+#   contents: read    # This is required for actions/checkout
       
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-    env:
-      AWS_REGION: ${{ vars.AWS_REGION }}
-      TF_VAR_BUCKET_NAME: ${{ vars.TF_VAR_BUCKET_NAME }}
+#     env:
+#       AWS_REGION: ${{ vars.AWS_REGION }}
+#       TF_VAR_BUCKET_NAME: ${{ vars.TF_VAR_BUCKET_NAME }}
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v4.0.2
-        with:
-          role-to-assume: ${{ vars.IAM_ROLE_ARN }}
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: ${{ vars.AWS_REGION }}
+#       - name: configure aws credentials
+#         uses: aws-actions/configure-aws-credentials@v4.0.2
+#         with:
+#           role-to-assume: ${{ vars.IAM_ROLE_ARN }}
+#           role-session-name: GitHub_to_AWS_via_FederatedOIDC
+#           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Sts GetCallerIdentity
-        run: |
-          aws sts get-caller-identity
+#       - name: Sts GetCallerIdentity
+#         run: |
+#           aws sts get-caller-identity
 
-      - name: Lint Terraform
-        uses: actionshub/terraform-lint@2.0.1
+#       - name: Lint Terraform
+#         uses: actionshub/terraform-lint@2.0.1
