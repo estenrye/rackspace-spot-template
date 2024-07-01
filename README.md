@@ -14,6 +14,34 @@ This repository contains a Terraform template for provisioning resources on Rack
 
 The Rackspace Spot TF Template provides a convenient way to provision resources on Rackspace Spot instances using Terraform. It includes pre-configured modules and examples to help you get started quickly.
 
+## Configuring the saml2aws idp account for the terraform S3 backend.
+
+```bash
+saml2aws configure \
+  --idp-account=ryezone-labs \
+  --idp-provider=JumpCloud \
+  --mfa=WEBAUTHN \
+  --profile=ryezone-labs \
+  --url=https://sso.jumpcloud.com/saml2/aws-rzlbs \
+  --cache-saml
+```
+
+## Logging into saml2aws for the terraform S3 backend.
+
+```bash
+saml2aws login \
+  --idp-account=ryezone-labs \
+  --profile=ryezone-labs
+```
+
+## Running Tasks Locally
+
+```bash
+export AWS_PROFILE=ryezone-labs
+export AWS_REGION=us-east-2
+export TF_VAR_BUCKET_NAME=tf-cloudspace-bucket
+```
+
 ## Getting Started
 
 To get started with this template, follow these steps:
