@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "logging_bucket" {
   bucket        = "s3-access-logs"
   force_destroy = var.force_destroy
   
-  ##tfsec:ignore:aws-s3-enable-bucket-logging
+  #tfsec:ignore:aws-s3-enable-bucket-logging
 
   tags = {
     Name    = "s3-access-logs"
