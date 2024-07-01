@@ -1,32 +1,32 @@
 terraform {
-    required_version = ">= 0.13"
+  required_version = ">= 0.13"
 
-    backend "s3" {
-        key = "terraform.tfstate.d/backent-aws-s3"
+  backend "s3" {
+    key = "terraform.tfstate.d/backent-aws-s3"
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "5.52.0"
     }
 
-    required_providers {
-        aws = {
-            source = "hashicorp/aws"
-            version = "5.52.0"
-        }
-
-        tls = {
-            source = "hashicorp/tls"
-            version = "4.0.5"
-        }
-
-        github = {
-            source = "integrations/github"
-            version = "6.2.1"
-        }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "4.0.5"
     }
+
+    github = {
+      source  = "integrations/github"
+      version = "6.2.1"
+    }
+  }
 }
 
 provider "aws" {
-    region = var.aws_region
+  region = var.aws_region
 }
 
 provider "github" {
-    owner = var.github_orgname
+  owner = var.github_orgname
 }
