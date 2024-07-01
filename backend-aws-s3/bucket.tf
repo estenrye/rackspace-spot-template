@@ -1,3 +1,12 @@
+resource "aws_kms_key" "tf_state_bucket_key" {
+  enable_key_rotation = true
+
+  tags = {
+    Name    = var.bucket_name
+    Project = "terraform-state-storage"
+  }
+}
+
 resource "aws_s3_bucket" "tf_state_bucket" {
   bucket        = var.bucket_name
   force_destroy = var.force_destroy
@@ -22,7 +31,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state_bucket_s
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+        kms_master_key_id = aws_kms_key.tf_state_bucket_key.arn
+        sse_algorithm     = "aws:kms"
     }
   }
 }
