@@ -17,11 +17,18 @@ resource "aws_s3_bucket" "tf_state_bucket" {
   }
 }
 
-resource "aws_s3_bucket_versioning" "versioning_example" {
+resource "aws_s3_bucket_versioning" "tf_state_bucket" {
   bucket = aws_s3_bucket.tf_state_bucket.id
   versioning_configuration {
     status = "Enabled"
   }
+}
+
+resource "aws_s3_bucket_logging" "tf_state_bucket" {
+  bucket = aws_s3_bucket.example.id
+
+  target_bucket = aws_s3_bucket.log_bucket.id
+  target_prefix = "${var.bucket_name}/"
 }
 
 resource "aws_s3_bucket_public_access_block" "tf_state_bucket_public_access_block" {
