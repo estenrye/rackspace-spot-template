@@ -1,5 +1,6 @@
 resource "aws_kms_key" "tf_state_bucket_key" {
   enable_key_rotation = true
+  policy      = data.aws_iam_policy_document.default_kms_key_policy.json
 
   tags = {
     Name    = var.bucket_name

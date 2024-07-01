@@ -1,5 +1,6 @@
 resource "aws_kms_key" "logging_bucket" {
   enable_key_rotation = true
+  policy      = data.aws_iam_policy_document.default_kms_key_policy.json
 
   tags = {
     Name    = "s3-access-logs-key"
@@ -87,4 +88,3 @@ data "aws_iam_policy_document" "s3_access_logging_bucket_policy" {
     }
   }
 }
-
