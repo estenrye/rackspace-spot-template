@@ -102,7 +102,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "logging_bucket" {
     expiration {
         days = 730
     }
-    
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+
     noncurrent_version_expiration {
       noncurrent_days = 90
     }

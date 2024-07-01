@@ -63,6 +63,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "tf_state_bucket" {
   rule {
     id = "versioning-rule"
 
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+    
     noncurrent_version_expiration {
       noncurrent_days = 90
     }
