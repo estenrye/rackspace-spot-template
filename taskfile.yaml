@@ -104,6 +104,9 @@ tasks:
     cmds:
       - task: lint
         vars:
+          WORKSPACE: backend-aws-s3
+      - task: lint
+        vars:
           WORKSPACE: cloudspace
       - task: lint
         vars:

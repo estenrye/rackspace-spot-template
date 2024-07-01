@@ -30,7 +30,7 @@ resource "aws_iam_openid_connect_provider" "github_actions_oidc_provider" {
     ]
 
     thumbprint_list = [
-        data.tls_certificate.github_actions_cert.certificates.0.sha1_fingerprint
+        data.tls_certificate.github_actions_cert.certificates[0].sha1_fingerprint
     ]
 
     tags = {
