@@ -2,11 +2,17 @@ name: Tfsec Checks on Terraform Code
 
 # Only trigger, when the build workflow succeeded
 on:
-  workflow_run:
-    workflows: ["Tflint Checks on Terraform Code"]
-    types:
-      - completed
-      
+#   workflow_run:
+#     workflows: ["Tflint Checks on Terraform Code"]
+#     types:
+#       - completed
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches:
+      - main
+
 permissions: read-all
 
 jobs:
