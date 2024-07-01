@@ -8,8 +8,7 @@ resource "aws_kms_key" "logging_bucket" {
   }
 }
 
-#tfsec:ignore:aws-s3-enable-bucket-logging
-#checkov:skip=CKV2_AWS_62:Event notification is not required at this time.
+#tfsec:ignore:aws-s3-enable-bucket-logging checkov:skip=CKV2_AWS_62:Event notification is not required at this time.
 resource "aws_s3_bucket" "logging_bucket" {
   bucket        = "s3-access-logs"
   force_destroy = var.force_destroy
