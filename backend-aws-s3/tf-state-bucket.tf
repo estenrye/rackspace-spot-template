@@ -8,8 +8,8 @@ resource "aws_kms_key" "tf_state_bucket_key" {
   }
 }
 
-#checkov:skip=CKV2_AWS_62:Event notification is not required at this time.
 resource "aws_s3_bucket" "tf_state_bucket" {
+  #checkov:skip=CKV2_AWS_62:Event notification is not required for this bucket
   bucket        = var.bucket_name
   force_destroy = var.force_destroy
 
