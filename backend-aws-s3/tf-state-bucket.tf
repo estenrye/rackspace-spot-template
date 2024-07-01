@@ -1,6 +1,6 @@
 resource "aws_kms_key" "tf_state_bucket_key" {
   enable_key_rotation = true
-  policy      = data.aws_iam_policy_document.default_kms_key_policy.json
+  policy              = data.aws_iam_policy_document.default_kms_key_policy.json
 
   tags = {
     Name    = var.bucket_name
@@ -48,8 +48,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state_bucket_s
 
   rule {
     apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.tf_state_bucket_key.arn
-        sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.tf_state_bucket_key.arn
+      sse_algorithm     = "aws:kms"
     }
   }
 }
@@ -66,7 +66,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "tf_state_bucket" {
     abort_incomplete_multipart_upload {
       days_after_initiation = 7
     }
-    
+
     noncurrent_version_expiration {
       noncurrent_days = 90
     }

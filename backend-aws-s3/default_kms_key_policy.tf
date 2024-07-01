@@ -1,6 +1,6 @@
-data "aws_iam_policy_document" default_kms_key_policy {
+data "aws_iam_policy_document" "default_kms_key_policy" {
   statement {
-    sid = "DefaultAllowKeyAdministration"
+    sid    = "DefaultAllowKeyAdministration"
     effect = "Allow"
     principals {
       type        = "AWS"

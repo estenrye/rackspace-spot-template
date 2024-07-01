@@ -1,6 +1,6 @@
 resource "aws_kms_key" "logging_bucket" {
   enable_key_rotation = true
-  policy      = data.aws_iam_policy_document.default_kms_key_policy.json
+  policy              = data.aws_iam_policy_document.default_kms_key_policy.json
 
   tags = {
     Name    = "s3-access-logs-key"
@@ -14,7 +14,7 @@ resource "aws_s3_bucket" "logging_bucket" {
   #checkov:skip=CKV_AWS_144:Cross region replication is not required for this bucket
   bucket        = "s3-access-logs"
   force_destroy = var.force_destroy
-  
+
 
   tags = {
     Name    = "s3-access-logs"
@@ -43,8 +43,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "logging_bucket" {
 
   rule {
     apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.logging_bucket.arn
-        sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.logging_bucket.arn
+      sse_algorithm     = "aws:kms"
     }
   }
 }
@@ -56,7 +56,7 @@ resource "aws_s3_bucket_policy" "logging_bucket" {
 
 data "aws_iam_policy_document" "s3_access_logging_bucket_policy" {
   statement {
-    sid = "S3ServerAccessLogsPolicy"
+    sid    = "S3ServerAccessLogsPolicy"
     effect = "Allow"
 
     actions = [
@@ -64,7 +64,7 @@ data "aws_iam_policy_document" "s3_access_logging_bucket_policy" {
     ]
 
     principals {
-      type       = "Service"
+      type        = "Service"
       identifiers = ["logging.s3.amazonaws.com"]
     }
 
@@ -73,19 +73,19 @@ data "aws_iam_policy_document" "s3_access_logging_bucket_policy" {
     ]
 
     condition {
-        test     = "ArnLike"
-        variable = "aws:SourceArn"
-        values   = [
-            "arn:aws:s3:::${var.bucket_name}"
-        ]
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+      values = [
+        "arn:aws:s3:::${var.bucket_name}"
+      ]
     }
 
     condition {
-        test     = "StringEquals"
-        variable = "aws:SourceAccount"
-        values   = [
-            data.aws_caller_identity.current.account_id
-        ]
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values = [
+        data.aws_caller_identity.current.account_id
+      ]
     }
   }
 }
@@ -100,7 +100,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "logging_bucket" {
     id = "versioning-rule"
 
     expiration {
-        days = 730
+      days = 730
     }
 
     abort_incomplete_multipart_upload {
