@@ -119,6 +119,9 @@ tasks:
       NAMES:
         sh: ls -1 cloudspace/vars
     cmds:
+      - task: init
+        vars:
+          WORKSPACE: backend-aws-s3
       - task: each-env
         vars:
           TASK: init
@@ -131,6 +134,15 @@ tasks:
         vars:
           TASK: init
           WORKSPACE: cloudspace-kubeconfig
+
+  plan-backend-aws:
+    desc: Plan the AWS backend Terraform changes.
+    cmds:
+      - mkdir -p backend-aws-s3/vars/backend-aws-s3
+      - task: plan
+        vars:
+          WORKSPACE: backend-aws-s3
+          NAME: backend-aws-s3
 
   plan-cloudspace:
     desc: Plan the Cloudspace Terraform changes.
@@ -257,6 +269,16 @@ tasks:
     internal: true
     cmds:
       - terraform {{ .GLOBAL_ARGS }} {{ .ACTION }} {{ .ARGS }}
+
+  import:
+    desc: Initialize the Terraform workspace
+    cmds:
+      - task: tf
+        vars:
+          WORKSPACE: "{{ .WORKSPACE }}"
+          ACTION: "import"
+          ARGS: "{{ .SRC }} {{ .DST }}"
+          NAME: "{{ .NAME }}"
 
   init:
     desc: Initialize the Terraform workspace
