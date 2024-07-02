@@ -121,17 +121,17 @@ jobs:
         run: terraform validate
         working-directory: backend-aws-s3
 
-      - name: Plan
-        run: terraform plan -out .planfile
+      - name: Run Terraform Plan
+        run: terraform plan
         working-directory: backend-aws-s3
 
-      - name: Show
-        run: terraform show -json .planfile
-        working-directory: backend-aws-s3
-
-      - name: Post PR comment
-        uses: estenrye/terraform-plan-comment@integration
+  after-plan:
+    runs-on: ubuntu-latest
+    needs:
+      - tf-plan
+    steps:
+      - name: Notify terraform plan result as PR comment
+        uses: kota65535/github-terraform-plan-comment-action@v1
         with:
-          token: ${{ github.token }}
-          planfile: .planfile
-          working-directory: backend-aws-s3
+          plan-job: tf-plan
+          plan-step: Run Terraform Plan
