@@ -118,7 +118,7 @@ jobs:
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate - no-color
+        run: terraform validate
         working-directory: backend-aws-s3
 
       - name: Plan
