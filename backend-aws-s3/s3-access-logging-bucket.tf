@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "logging_bucket" {
   }
 }
 
-resource "aws_s3_bucket_versioning" "versioning_example" {
+resource "aws_s3_bucket_versioning" "logging_bucket" {
   bucket = aws_s3_bucket.logging_bucket.id
   versioning_configuration {
     status = "Enabled"
