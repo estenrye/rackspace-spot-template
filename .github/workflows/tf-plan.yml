@@ -89,7 +89,7 @@ jobs:
            docker run -t -v ${{ github.workspace }}:/tf --workdir /tf bridgecrew/checkov --directory /tf --skip-check CKV2_GHA_1
 
   tf-plan:
-    name: Plan Terraform Changes and Comment on PR
+    name: Plan Terraform Changes
     runs-on: ubuntu-latest
     needs: [tf-fmt-checks, tf-lint-checks, tf-sec-checks, tf-checkov-checks]
     steps:
@@ -126,6 +126,7 @@ jobs:
         working-directory: backend-aws-s3
 
   after-plan:
+    name: Notify Terraform Plan Result
     runs-on: ubuntu-latest
     needs:
       - tf-plan
@@ -133,5 +134,5 @@ jobs:
       - name: Notify terraform plan result as PR comment
         uses: kota65535/github-terraform-plan-comment-action@v1
         with:
-          plan-job: tf-plan
+          plan-job: Plan Terraform Changes
           plan-step: Run Terraform Plan
