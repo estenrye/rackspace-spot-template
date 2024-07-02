@@ -126,7 +126,7 @@ jobs:
         working-directory: backend-aws-s3
 
       - name: Post PR comment
-        uses: borchero/terraform-plan-comment@v1
+        uses: borchero/terraform-plan-comment@v1.0.2
         with:
           token: ${{ github.token }}
           planfile: .planfile
