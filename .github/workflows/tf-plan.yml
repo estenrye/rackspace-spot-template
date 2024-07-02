@@ -113,7 +113,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform init -backend-config=bucket=${TF_VAR_BUCKET_NAME}"
         working-directory: backend-aws-s3
 
       - name: Terraform Validate
