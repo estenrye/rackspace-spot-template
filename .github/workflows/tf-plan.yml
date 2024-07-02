@@ -132,7 +132,7 @@ jobs:
       - tf-plan
     steps:
       - name: Notify terraform plan result as PR comment
-        uses: kota65535/github-terraform-plan-comment-action@v1
+        uses: kota65535/github-terraform-plan-comment-action@v2.0.1
         with:
           plan-job: Plan Terraform Changes
           plan-step: Run Terraform Plan
