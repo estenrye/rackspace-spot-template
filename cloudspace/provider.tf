@@ -1,21 +1,21 @@
 terraform {
-    required_version = ">= 0.13"
+  required_version = ">= 0.13"
 
-    backend "s3" {
-        key = "terraform.tfstate.d/cloudspace"
+  backend "s3" {
+    key = "terraform.tfstate.d/cloudspace"
+  }
+
+  required_providers {
+    http = {
+      source  = "hashicorp/http"
+      version = "3.4.3"
     }
 
-    required_providers {
-        http = {
-            source = "hashicorp/http"
-            version = "3.4.3"
-        }
-
-        spot = {
-            source = "rackerlabs/spot"
-            version = "0.0.10"
-        }
+    spot = {
+      source  = "rackerlabs/spot"
+      version = "0.0.10"
     }
+  }
 }
 
 provider "http" {}

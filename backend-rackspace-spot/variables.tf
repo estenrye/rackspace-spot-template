@@ -1,10 +1,10 @@
 variable "github_orgname" {
-  type = string
+  type    = string
   default = "estenrye"
 }
 
 variable "github_repo" {
-  type = string
+  type    = string
   default = "rackspace-spot-template"
 }
 
