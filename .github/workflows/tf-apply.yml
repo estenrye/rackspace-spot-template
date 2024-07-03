@@ -1,4 +1,4 @@
-name: Plan Terraform Changes
+name: Apply Terraform Code Changes
 
 on:
   workflow_dispatch:
