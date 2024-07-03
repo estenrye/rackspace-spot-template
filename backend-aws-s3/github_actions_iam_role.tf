@@ -37,7 +37,22 @@ resource "aws_iam_role" "github_actions_iam_role" {
           Resource = [
             aws_s3_bucket.tf_state_bucket.arn
           ]
-        }
+        },
+        {
+          Effect = "Allow",
+          Action = [
+            "iam:CreateOpenIDConnectProvider",
+            # "iam:DeleteOpenIDConnectProvider",
+            # "iam:GetOpenIDConnectProvider",
+            # "iam:UpdateOpenIDConnectProviderThumbprint",
+            # "iam:TagOpenIDConnectProvider",
+            # "iam:UntagOpenIDConnectProvider"
+          ],
+          Resource = [
+            aws_iam_openid_connect_provider.github_actions_oidc_provider.arn
+          ]
+        },
+        {}
       ]
     })
   }
