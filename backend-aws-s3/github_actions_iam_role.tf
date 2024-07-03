@@ -54,8 +54,8 @@ resource "aws_iam_role" "github_actions_iam_role" {
             "kms:TagResource"
           ],
           Resource = [
-            aws_kms_key.tf_state_key.arn,
-            aws.kms_key.logging_bucket.arn
+            aws_kms_key.tf_state_bucket.arn,
+            aws_kms_key.logging_bucket.arn
           ]
         },
         {
