@@ -6,8 +6,11 @@ data "aws_iam_policy_document" "default_kms_key_policy" {
     sid    = "DefaultAllowKeyAdministration"
     effect = "Allow"
     principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+        aws_iam_role.github_actions_iam_role.arn
+      ]
     }
     resources = ["*"]
     actions   = ["kms:*"]

@@ -53,10 +53,7 @@ resource "aws_iam_role" "github_actions_iam_role" {
           Action = [
             "kms:TagResource"
           ],
-          Resource = [
-            aws_kms_key.tf_state_bucket.arn,
-            aws_kms_key.logging_bucket.arn
-          ]
+          Resource = ["*"]
         },
         {
           Effect = "Allow",
