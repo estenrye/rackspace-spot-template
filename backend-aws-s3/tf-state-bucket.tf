@@ -1,4 +1,4 @@
-resource "aws_kms_key" "tf_state_bucket_key" {
+resource "aws_kms_key" "tf_state_bucket" {
   enable_key_rotation = true
   policy              = data.aws_iam_policy_document.default_kms_key_policy.json
 
@@ -48,7 +48,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state_bucket_s
 
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = aws_kms_key.tf_state_bucket_key.arn
+      kms_master_key_id = aws_kms_key.tf_state_bucket.arn
       sse_algorithm     = "aws:kms"
     }
   }

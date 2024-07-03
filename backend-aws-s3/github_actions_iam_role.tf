@@ -37,6 +37,36 @@ resource "aws_iam_role" "github_actions_iam_role" {
           Resource = [
             aws_s3_bucket.tf_state_bucket.arn
           ]
+        },
+        {
+          Effect = "Allow",
+          Action = [
+            "iam:CreateOpenIDConnectProvider",
+            "iam:TagOpenIDConnectProvider"
+          ],
+          Resource = [
+            aws_iam_openid_connect_provider.github_actions_oidc_provider.arn
+          ]
+        },
+        {
+          Effect = "Allow",
+          Action = [
+            "kms:TagResource"
+          ],
+          Resource = [
+            aws_kms_key.tf_state_bucket.arn,
+            aws_kms_key.logging_bucket.arn
+          ]
+        },
+        {
+          Effect = "Allow",
+          Action = [
+            "s3:CreateBucket"
+          ],
+          Resource = [
+            aws_s3_bucket.logging_bucket.arn,
+            aws_s3_bucket.tf_state_bucket.arn
+          ]
         }
       ]
     })
