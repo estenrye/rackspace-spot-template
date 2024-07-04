@@ -54,7 +54,10 @@ resource "aws_iam_role" "github_actions_iam_role" {
           Effect = "Allow",
           Action = [
             "kms:CreateKey",
-            "kms:TagResource"
+            "kms:TagResource",
+            "iam:GetRole*",
+            "iam:ListRole*",
+            "iam:ListAttachedRolePolicies"
           ],
           Resource = ["*"]
         },
@@ -64,13 +67,16 @@ resource "aws_iam_role" "github_actions_iam_role" {
             "s3:CreateBucket",
             "s3:ListBucket",
             "s3:GetBucket*",
-            "s3:GetAccelerateConfiguration"
+            "s3:GetAccelerateConfiguration",
+            "s3:GetLifecycleConfiguration",
+            "s3:GetReplicationConfiguration",
+            "s3:GetEncryptionConfiguration"
           ],
           Resource = [
             aws_s3_bucket.logging_bucket.arn,
             aws_s3_bucket.tf_state_bucket.arn
           ]
-        }
+        },
       ]
     })
   }
