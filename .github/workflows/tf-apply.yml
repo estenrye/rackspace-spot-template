@@ -133,15 +133,3 @@ jobs:
       - name: Apply Terraform Plan
         run: terraform apply -auto-approve .planfile
         working-directory: backend-aws-s3
-
-  after-apply:
-    name: Notify Terraform Plan Result
-    runs-on: ubuntu-latest
-    needs:
-      - tf-apply
-    steps:
-      - name: Notify terraform plan result as PR comment
-        uses: kota65535/github-terraform-plan-comment-action@v2.0.1
-        with:
-          plan-job: Apply Terraform Changes
-          plan-step: Run Terraform Plan
