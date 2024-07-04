@@ -24,7 +24,7 @@ variable "github_orgname" {
 }
 
 variable "GITHUB_ADMIN_TOKEN" {
-  type = string
+  type    = string
   default = null
 }
 
