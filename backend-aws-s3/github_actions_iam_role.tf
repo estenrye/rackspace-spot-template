@@ -42,6 +42,7 @@ resource "aws_iam_role" "github_actions_iam_role" {
           Effect = "Allow",
           Action = [
             "iam:CreateOpenIDConnectProvider",
+            "iam:GetOpenIDConnectProvider",
             "iam:TagOpenIDConnectProvider"
           ],
           Resource = [
@@ -51,6 +52,7 @@ resource "aws_iam_role" "github_actions_iam_role" {
         {
           Effect = "Allow",
           Action = [
+            "kms:CreateKey",
             "kms:TagResource"
           ],
           Resource = ["*"]
@@ -58,7 +60,8 @@ resource "aws_iam_role" "github_actions_iam_role" {
         {
           Effect = "Allow",
           Action = [
-            "s3:CreateBucket"
+            "s3:CreateBucket",
+            "s3:ListBucket"
           ],
           Resource = [
             aws_s3_bucket.logging_bucket.arn,
