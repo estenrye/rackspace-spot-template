@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 0.13"
 
   backend "s3" {
-    key = "terraform.tfstate.d/backent-aws-s3"
+    key = "terraform.tfstate.d/backend-aws-s3"
   }
 
   required_providers {
@@ -29,4 +29,5 @@ provider "aws" {
 
 provider "github" {
   owner = var.github_orgname
+  token = var.GITHUB_ADMIN_TOKEN
 }
