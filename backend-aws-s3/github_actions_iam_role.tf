@@ -73,6 +73,7 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
       "iam:GetPolicy",
       "iam:GetPolicyVersion",
       "iam:ListPolicies",
+      "iam:ListPolicyVersions",
       "iam:ListPolicyTags",
       "iam:ListAttachedRolePolicies",
       "iam:TagPolicy",
