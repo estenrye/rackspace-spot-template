@@ -29,4 +29,5 @@ provider "aws" {
 
 provider "github" {
   owner = var.github_orgname
+  token = var.GITHUB_ADMIN_TOKEN
 }

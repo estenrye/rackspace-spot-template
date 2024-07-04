@@ -23,6 +23,11 @@ variable "github_orgname" {
   default = "estenrye"
 }
 
+variable "GITHUB_ADMIN_TOKEN" {
+  type = string
+  default = null
+}
+
 variable "github_repo" {
   type    = string
   default = "rackspace-spot-template"
