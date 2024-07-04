@@ -74,7 +74,7 @@ jobs:
       - name: Run Tfsec
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
-          additional_args: --ignore-hcl-error
+          additional_args: --ignore-hcl-errors
           github_token: ${{ secrets.CI_GITHUB_TOKEN }}
 
   tf-checkov-checks:
