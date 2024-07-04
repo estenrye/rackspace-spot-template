@@ -8,6 +8,11 @@ variable "bucket_name" {
   type    = string
 }
 
+variable "logging_bucket_name" {
+  default = "ryezone-labs-s3-access-logs"
+  type    = string
+}
+
 variable "force_destroy" {
   default = false
   type    = bool
