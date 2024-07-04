@@ -119,11 +119,21 @@ resource "aws_iam_policy" "github_actions_iam_policy" {
   name        = "github-actions-iam-policy"
   description = "IAM policy for GitHub Actions"
   policy      = data.aws_iam_policy_document.github_actions_iam_policy.json
+
+  tags = {
+    Name    = "GitHub Actions IAM Role"
+    Project = "terraform-state-storage"
+  }
 }
 
 resource "aws_iam_role" "github_actions_iam_role" {
   name               = "GitHubActionsIAMRole"
   assume_role_policy = data.aws_iam_policy_document.github_actions_iam_assume_role_policy.json
+
+  tags = {
+    Name    = "GitHub Actions IAM Role"
+    Project = "terraform-state-storage"
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "github_actions_iam_policy_attachment" {
