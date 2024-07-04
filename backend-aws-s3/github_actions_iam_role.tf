@@ -54,7 +54,18 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
     effect = "Allow"
     actions = [
       "kms:CreateKey",
-      "kms:TagResource",
+      "kms:TagResource"
+    ]
+    resources = [
+      aws_kms_key.tf_state_bucket.arn,
+      aws_kms_key.logging_bucket.arn
+    ]
+  }
+
+  statement {
+    sid    = "AllowIAM Role Management"
+    effect = "Allow"
+    actions = [
       "iam:GetRole*",
       "iam:ListRole*",
       "iam:ListAttachedRolePolicies",
