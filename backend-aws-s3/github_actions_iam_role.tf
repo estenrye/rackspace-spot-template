@@ -57,7 +57,9 @@ resource "aws_iam_role" "github_actions_iam_role" {
             "kms:TagResource",
             "iam:GetRole*",
             "iam:ListRole*",
-            "iam:ListAttachedRolePolicies"
+            "iam:ListAttachedRolePolicies",
+            "iam:DeleteRolePolicy",
+            "iam:PutRolePolicy"
           ],
           Resource = ["*"]
         },
