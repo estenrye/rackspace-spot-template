@@ -65,7 +65,7 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
   }
 
   statement {
-    sid = "AllowIAMPolicyManagement"
+    sid    = "AllowIAMPolicyManagement"
     effect = "Allow"
     actions = [
       "iam:CreatePolicy",
