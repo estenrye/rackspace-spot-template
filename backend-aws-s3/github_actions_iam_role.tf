@@ -126,7 +126,22 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
       "s3:GetAccelerateConfiguration",
       "s3:GetLifecycleConfiguration",
       "s3:GetReplicationConfiguration",
-      "s3:GetEncryptionConfiguration"
+      "s3:GetEncryptionConfiguration",
+      "s3:PutBucketCORS",
+      "s3:PutBucketLogging",
+      "s3:PutBucketNotification",
+      "s3:PutBucketObjectLockConfiguration",
+      "s3:PutBucketOwnershipControls",
+      "s3:PutBucketPolicy",
+      "s3:PutBucketPublicAccessBlock",
+      "s3:PutBucketRequestPayment",
+      "s3:PutBucketTagging",
+      "s3:PutBucketVersioning",
+      "s3:PutBucketWebsite",
+      "s3:PutAccelerateConfiguration",
+      "s3:PutLifecycleConfiguration",
+      "s3:PutReplicationConfiguration",
+      "s3:PutEncryptionConfiguration"
     ]
     resources = [
       aws_s3_bucket.logging_bucket.arn,
