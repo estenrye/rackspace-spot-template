@@ -1,6 +1,6 @@
 data "aws_iam_policy_document" "github_actions_iam_assume_role_policy" {
   statement {
-    sid    = "Allow Assume Role with Web Identity"
+    sid    = "AllowAssumeRoleWithWebIdentity"
     effect = "Allow"
     principals {
       type        = "Federated"
@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "github_actions_iam_assume_role_policy" {
 
 data "aws_iam_policy_document" "github_actions_iam_policy" {
   statement {
-    sid    = "Allow S3 Object Access for TF State Bucket"
+    sid    = "AllowS3ObjectAccessForTFStateBucket"
     effect = "Allow"
     actions = [
       "s3:GetObject",
@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
   }
 
   statement {
-    sid    = "Allow OIDC Provider Management"
+    sid    = "AllowOIDCProviderManagement"
     effect = "Allow"
     actions = [
       "iam:CreateOpenIDConnectProvider",
@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
   }
 
   statement {
-    sid    = "Allow KMS Key and IAM Role Management"
+    sid    = "AllowKMSKeyManagement"
     effect = "Allow"
     actions = [
       "kms:CreateKey",
@@ -65,7 +65,25 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
   }
 
   statement {
-    sid    = "AllowIAM Role Management"
+    sid = "AllowIAMPolicyManagement"
+    effect = "Allow"
+    actions = [
+      "iam:CreatePolicy",
+      "iam:CreatePolicyVersion",
+      "iam:GetPolicy",
+      "iam:ListPolicies",
+      "iam:ListPolicyTags",
+      "iam:ListAttachedRolePolicies",
+      "iam:TagPolicy",
+      "iam:UntagPolicy"
+    ]
+    resources = [
+      "arn:aws:iam::aws:policy/github-actions-iam-policy",
+    ]
+  }
+
+  statement {
+    sid    = "AllowIAMRoleManagement"
     effect = "Allow"
     actions = [
       "iam:GetRole",
@@ -76,7 +94,8 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
       "iam:ListAttachedRolePolicies",
       "iam:AttachRolePolicy",
       "iam:DeleteRolePolicy",
-      "iam:PutRolePolicy"
+      "iam:PutRolePolicy",
+      "iam:UpdateAssumeRolePolicy"
     ]
     resources = [
       aws_iam_role.github_actions_iam_role.arn
@@ -84,7 +103,7 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
   }
 
   statement {
-    sid    = "Allow Bucket Management"
+    sid    = "AllowBucketManagement"
     effect = "Allow"
     actions = [
       "s3:CreateBucket",
