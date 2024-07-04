@@ -30,6 +30,8 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
       "s3:ListBucket",
       "s3:DeleteObject"
     ]
+    
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       aws_s3_bucket.tf_state_bucket.arn,
       "${aws_s3_bucket.tf_state_bucket.arn}/*",
