@@ -8,7 +8,7 @@ terraform {
   required_providers {
     spot = {
       source  = "rackerlabs/spot"
-      version = "0.0.10"
+      version = "0.0.11"
     }
   }
 }
