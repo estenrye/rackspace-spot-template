@@ -122,7 +122,7 @@ resource "aws_iam_policy" "github_actions_iam_policy" {
 }
 
 resource "aws_iam_role" "github_actions_iam_role" {
-  name               = "github-actions-iam-role"
+  name               = "GitHubActionsIAMRole"
   assume_role_policy = data.aws_iam_policy_document.github_actions_iam_assume_role_policy.json
 }
 
