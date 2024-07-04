@@ -64,7 +64,7 @@ resource "aws_iam_role" "github_actions_iam_role" {
             "s3:CreateBucket",
             "s3:ListBucket",
             "s3:GetBucket*",
-            "s3express:CreateSession"
+            "s3:GetAccelerateConfiguration"
           ],
           Resource = [
             aws_s3_bucket.logging_bucket.arn,
