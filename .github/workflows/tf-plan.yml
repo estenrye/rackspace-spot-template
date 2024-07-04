@@ -72,7 +72,7 @@ jobs:
 
       # Tfsec - Security scanner for your Terraform code
       - name: Run Tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
+        uses: aquasecurity/tfsec-action@v1.0.3
 
   tf-checkov-checks:
     name: Checkov Checks on Terraform Code
