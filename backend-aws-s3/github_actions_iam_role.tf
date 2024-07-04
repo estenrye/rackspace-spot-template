@@ -71,6 +71,7 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
       "iam:CreatePolicy",
       "iam:CreatePolicyVersion",
       "iam:GetPolicy",
+      "iam:GetPolicyVersion",
       "iam:ListPolicies",
       "iam:ListPolicyTags",
       "iam:ListAttachedRolePolicies",
@@ -78,7 +79,7 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
       "iam:UntagPolicy"
     ]
     resources = [
-      "arn:aws:iam::aws:policy/github-actions-iam-policy",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/github-actions-iam-policy",
     ]
   }
 
@@ -88,7 +89,7 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
     actions = [
       "iam:GetRole",
       "iam:GetRolePolicy",
-      "iam:ListRole",
+      "iam:ListRoles",
       "iam:ListRolePolicies",
       "iam:ListRoleTags",
       "iam:ListAttachedRolePolicies",
