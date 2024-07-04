@@ -64,6 +64,7 @@ resource "aws_iam_role" "github_actions_iam_role" {
             "s3:CreateBucket",
             "s3:ListBucket",
             "s3:GetBucketPolicy",
+            "s3:GetBucketAcl",
             "s3express:CreateSession"
           ],
           Resource = [
