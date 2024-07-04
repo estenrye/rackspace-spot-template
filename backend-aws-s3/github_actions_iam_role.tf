@@ -66,13 +66,19 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
     sid    = "AllowIAM Role Management"
     effect = "Allow"
     actions = [
-      "iam:GetRole*",
-      "iam:ListRole*",
+      "iam:GetRole",
+      "iam:GetRolePolicy",
+      "iam:ListRole",
+      "iam:ListRolePolicies",
+      "iam:ListRoleTags",
       "iam:ListAttachedRolePolicies",
+      "iam:AttachRolePolicy",
       "iam:DeleteRolePolicy",
       "iam:PutRolePolicy"
     ]
-    resources = ["*"]
+    resources = [
+      aws_iam_role.github_actions_iam_role.arn
+    ]
   }
 
   statement {
@@ -81,7 +87,20 @@ data "aws_iam_policy_document" "github_actions_iam_policy" {
     actions = [
       "s3:CreateBucket",
       "s3:ListBucket",
-      "s3:GetBucket*",
+      "s3:GetBucketAcl",
+      "s3:GetBucketCORS",
+      "s3:GetBucketLocation",
+      "s3:GetBucketLogging",
+      "s3:GetBucketNotification",
+      "s3:GetBucketObjectLockConfiguration",
+      "s3:GetBucketOwnershipControls",
+      "s3:GetBucketPolicy",
+      "s3:GetBucketPolicyStatus",
+      "s3:GetBucketPublicAccessBlock",
+      "s3:GetBucketRequestPayment",
+      "s3:GetBucketTagging",
+      "s3:GetBucketVersioning",
+      "s3:GetBucketWebsite",
       "s3:GetAccelerateConfiguration",
       "s3:GetLifecycleConfiguration",
       "s3:GetReplicationConfiguration",
