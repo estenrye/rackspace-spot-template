@@ -15,6 +15,8 @@ Accepted
 - [How to manage multiple environments with Terraform](https://blog.gruntwork.io/how-to-manage-multiple-environments-with-terraform-32c7bc5d692), [Yevgeniy Brikman](https://medium.com/@brikis98), 2022-08-18
 - [Terraform Best Practices](https://www.terraform-best-practices.com/), [Yevgeniy Brikman](https://www.terraform-best-practices.com/)
 - [GitHub Actions: Limit workflow run or job concurrency](https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/), [GitHub Changelog](https://github.blog/changelog/), 2021-04-19
+- [Creating a composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action), [GitHub Docs](https://docs.github.com/en/actions/creating-actions/)
+
 ## Decision
 
 The change that we're proposing or have agreed to implement.
