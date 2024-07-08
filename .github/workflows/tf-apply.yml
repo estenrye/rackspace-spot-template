@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run Terraform Format Check
-        uses: estenrye/tf-fmt-composite-action@v1.0.17
+        uses: estenrye/tf-fmt-composite-action@v1.0.18
 
   tf-lint-checks:
     name: Tflint Checks on Terraform Code
