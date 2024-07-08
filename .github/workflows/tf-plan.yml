@@ -15,19 +15,9 @@ jobs:
   tf-fmt-checks:
     name: Terraform Format Checks
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout Repository
-      - name : Check out Git Repository
-        uses: actions/checkout@v4
-
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.8.2
-
-      # Terraform Format Check
       - name: Run Terraform Format Check
-        run: terraform fmt -check -recursive
+        uses: estenrye/tf-fmt-composite-action@v1.0.17
 
   tf-lint-checks:
     name: Tflint Checks on Terraform Code
