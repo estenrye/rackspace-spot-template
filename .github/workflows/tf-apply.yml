@@ -35,19 +35,12 @@ jobs:
   tf-sec-checks:
     name: Tfsec Checks on Terraform Code
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout Repository
-      - name : Check out Git Repository
-        uses: actions/checkout@v4
-
-      # Tfsec - Security scanner for your Terraform code
-      - name: Run Tfsec
-        uses: aquasecurity/tfsec-action@v1.0.3
+      - name: Run Terraform Linting Rules
+        uses: estenrye/tf-sec-composite-action@v1.0.0
         with:
-          additional_args: --ignore-hcl-errors
           github_token: ${{ secrets.CI_GITHUB_TOKEN }}
-
+        
   tf-checkov-checks:
     name: Checkov Checks on Terraform Code
     runs-on: ubuntu-latest
