@@ -40,16 +40,9 @@ jobs:
   tf-checkov-checks:
     name: Checkov Checks on Terraform Code
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout Repository
-      - name : Check out Git Repository
-        uses: actions/checkout@v4
-
-      # Checkov - Static code analysis tool for infrastructure-as-code
-      - name: Run Checkov
-        run: |
-           docker run -t -v ${{ github.workspace }}:/tf --workdir /tf bridgecrew/checkov --directory /tf --skip-check CKV2_GHA_1
+      - name: Run Terraform Linting Rules
+        uses: estenrye/tf-checkov-composite-action@v1.0.0
 
   tf-plan:
     name: Plan Terraform Changes
