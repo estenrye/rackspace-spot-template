@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run Terraform Linting Rules
-        uses: estenrye/tf-sec-composite-action@v1.0.1
+        uses: estenrye/tf-sec-composite-action@v1.0.22
         with:
           github_token: ${{ secrets.CI_GITHUB_TOKEN }}
         
